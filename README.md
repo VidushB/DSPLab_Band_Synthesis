@@ -1,5 +1,4 @@
 # synth
-![Making A Synth Banner](images/banner.png)
 An attempt at making a synth using Python
 
 ---
