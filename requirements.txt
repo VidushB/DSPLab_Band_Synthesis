@@ -1,4 +1,6 @@
 pyaudio
 numpy
 pygame
-black
+tk
+librosa
+matplotlib
