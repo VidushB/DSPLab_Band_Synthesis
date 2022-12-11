@@ -4,10 +4,11 @@
 - [x] fixed frequency
 - [x] modulation index (done by amplitute?)
 - [x] mix weights (done by amplitude?)
-- [ ] filters
-- [ ] being able to play while changing settings
-- [ ] midi -> wav
 - [ ] plot signal
+- [ ] midi -> wav
+- [ ] eliminate noise (might need further clipping?)
+- [ ] being able to play while changing settings
+- [ ] filters
 - [ ] multiple key bug
 - [ ] get rid of global state
 - [ ] partition into multiple files
