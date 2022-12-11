@@ -7,5 +7,6 @@
 [ ] being able to play while changing settings
 [ ] midi -> wav
 [ ] plot signal
+[ ] multiple key bug
 [ ] get rid of global state
 [ ] partition into multiple files
