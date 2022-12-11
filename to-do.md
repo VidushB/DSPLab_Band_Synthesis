@@ -1,12 +1,12 @@
-[x] amplitude
-[x] phase
-[x] ratio
-[x] fixed frequency
-[x] modulation index (done by amplitute?)
-[x] mix weights (done by amplitude?)
-[ ] being able to play while changing settings
-[ ] midi -> wav
-[ ] plot signal
-[ ] multiple key bug
-[ ] get rid of global state
-[ ] partition into multiple files
+- [x] amplitude
+- [x] phase
+- [x] ratio
+- [x] fixed frequency
+- [x] modulation index (done by amplitute?)
+- [x] mix weights (done by amplitude?)
+- [ ] being able to play while changing settings
+- [ ] midi -> wav
+- [ ] plot signal
+- [ ] multiple key bug
+- [ ] get rid of global state
+- [ ] partition into multiple files
