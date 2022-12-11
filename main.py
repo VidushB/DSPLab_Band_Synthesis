@@ -5,11 +5,14 @@ import librosa
 import numpy as np
 import threading
 import time
+import keyboard
 from collections import defaultdict
 from synth.components.envelopes import ADSREnvelope
 from synth.components.oscillators import SineOscillator, SquareOscillator, SawtoothOscillator, TriangleOscillator, ModulatedOscillator
-# from matplotlib.figure import Figure 
-# from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+from matplotlib.figure import Figure 
+from matplotlib.backends.backend_tkagg import (FigureCanvasTkAgg, 
+NavigationToolbar2Tk)
+import matplotlib.pyplot as plt
 
 BUFFER_SIZE = 256
 SAMPLE_RATE = 44100
@@ -30,6 +33,8 @@ key_to_note = {
     'm': 'b4',
     ',': 'c5',
 }
+
+keylist = list(key_to_note.keys())
 
 name_to_osc = {
     'sine':  SineOscillator,
@@ -93,7 +98,6 @@ class KeyTracker():
         if not self.is_pressed(event.char) and self.cnt[event.char] == 0:
             handle_key_event('release', event.char)
 
-
 def update_osc(*args):
     global cur_osc_str
     global cur_attack
@@ -104,6 +108,7 @@ def update_osc(*args):
     global osc_function
 
     osc = name_to_osc[cur_osc_str.get()]
+
     osc_function = get_osc_function(osc, cur_attack.get(), cur_decay.get(), cur_sustain.get(), cur_release.get())
     
     for note in notes_dict:
@@ -119,7 +124,8 @@ for osc_name in osc_options:
 waveform_frame.pack()
 osc_frame.pack()
 
-adsr_frame = ttk.Labelframe(root, text='adsr envelope', width=200, height=300)
+adsr_frame = ttk.Labelframe(root, text='ASDR envelope', width=200, height=300)
+script_quit = Tk.Button(root, text = 'Quit', command = root.destroy)
 cur_attack = Tk.DoubleVar(root, 0.05)
 cur_decay = Tk.DoubleVar(root, 0.2)
 cur_sustain = Tk.DoubleVar(root, 0.7)
@@ -128,17 +134,60 @@ attack_scale = Tk.Scale(adsr_frame, label='attack', variable=cur_attack, from_=0
 decay_scale = Tk.Scale(adsr_frame, label='decay', variable=cur_decay, from_=0, to=0.5, orient=HORIZONTAL, resolution=0.1)
 sustain_scale = Tk.Scale(adsr_frame, label='sustain', variable=cur_sustain, from_=0, to=1, orient=HORIZONTAL, resolution=0.1)
 release_scale = Tk.Scale(adsr_frame, label='release', variable=cur_release, from_=0, to=0.5, orient=HORIZONTAL, resolution=0.1)
+script_quit.pack(side = Tk.BOTTOM, fill = Tk.X)
 attack_scale.pack()
 decay_scale.pack()
 sustain_scale.pack()
 release_scale.pack()
 adsr_frame.pack()
+root.geometry("500x200")
 
 key_tracker = KeyTracker()
 for key in key_to_note:
     root.bind(f"<KeyPress-{key}>", key_tracker.report_key_press)
     root.bind(f"<KeyRelease-{key}>", key_tracker.report_key_release)
 
+# def plot(data):
+  
+#     # the figure that will contain the plot
+#     fig = Figure(figsize = (4, 3),
+#                  dpi = 100)
+  
+#     # list of squares
+#     #y = [i**2 for i in range(101)]
+  
+#     # adding the subplot
+#     plot1 = fig.add_subplot(111)
+    
+#     # plotting the graph
+#     plot1.clear()
+#     plot1.plot(data)
+    
+#     # creating the Tkinter canvas
+#     # containing the Matplotlib figure
+#     canvas = FigureCanvasTkAgg(fig,
+#                                master = root)  
+#     canvas.draw()
+#     canvas.flush_events()
+#     # placing the canvas on the Tkinter window
+#     canvas.get_tk_widget().pack()
+  
+#     # creating the Matplotlib toolbar
+#     toolbar = NavigationToolbar2Tk(canvas,
+#                                    root)
+#     toolbar.update()
+  
+#     # placing the toolbar on the Tkinter window
+#     canvas.get_tk_widget().pack()
+    
+
+# plot_button = Tk.Button(root, 
+#                      command = plot,
+#                      height = 2, 
+#                      width = 5,
+#                      text = "Plot")
+
+# plot_button.pack()
 
 cur_osc_str.trace("w", update_osc)
 cur_attack.trace("w", update_osc)
@@ -167,6 +216,11 @@ stream = pyaudio.PyAudio().open(
 # W1 = canvas.get_tk_widget()
 # W1.pack()
 
+def graph(data):
+    plt.plot(data)
+    plt.show()
+    plt.clear()
+
 try:
     osc_function = get_osc_function(SineOscillator, cur_attack.get(), cur_decay.get(), cur_sustain.get(), cur_release.get())
     notes_dict = {}
@@ -175,9 +229,32 @@ try:
         
         if notes_dict:
             samples = get_samples(notes_dict)
+            stream.write(samples.tobytes())
+            graph(samples)
+            #if key_pressed == 'x':
+            #    print("KEY PRESSED DAWG")
+
+            #if list(notes_dict.values())[-1][1] == False:
+                #plot(samples)
+                # print("PLOTTING")
+                # x = list(range(0,BUFFER_SIZE))
+                # y = samples 
+
+                # fig = plt.figure()
+                # ax = fig.add_subplot(111)
+                # line1, = ax.plot(x, y, 'r-')
+                # line1.set_ydata(samples)AAAAAAAAZ
+                # fig.canvas.draw()
+
+                
+                # canvas = FigureCanvasTkAgg(fig, root)
+                # canvas.draw()
+                # canvas.flush_events()
+                # canvas.get_tk_widget().pack(side=Tk.TOP, fill=Tk.BOTH, expand=True)
+
             # line.set_ydata(samples[::20])
             # canvas.draw()
-            stream.write(samples.tobytes())
+            # stream.write(samples.tobytes())
             # print(notes_dict.keys())
             ended_notes = [
                 k for k, o in notes_dict.items() if o[0].ended and o[1]
