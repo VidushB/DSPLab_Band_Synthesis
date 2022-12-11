@@ -331,7 +331,7 @@ class ADSR:
         self.release.trace("w", fn)
         fn(None, None, None)
 
-        self.adsr_frame.grid(row=2, column=0, columnspan=2)
+        self.adsr_frame.grid(row=0, column=2, columnspan=2)
 
     def get_state(self):
         return ADSRState(
