@@ -18,12 +18,13 @@ from synth.components.oscillators import (
 )
 from synth.components.oscillators.base_oscillator import Oscillator
 
-# from matplotlib.figure import Figure
-# from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+from matplotlib.figure import Figure
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
-BUFFER_SIZE = 256
+BUFFER_SIZE = 2**13
 SAMPLE_RATE = 44100
 NOTE_AMP = 0.1
+PLOT_SAMPLE_PERIOD = 10
 
 key_to_note = {
     "z": "c4",
@@ -78,6 +79,8 @@ def update_signal():
     global adsr_state
     global notes_dict
     global signal_function
+    global line
+    global canvas
 
     if osc_states and adsr_state:
         signal_function = get_signal_function(osc_states, adsr_state)
@@ -331,7 +334,7 @@ class ADSR:
         self.release.trace("w", fn)
         fn(None, None, None)
 
-        self.adsr_frame.grid(row=0, column=2, columnspan=2)
+        self.adsr_frame.grid(row=0, column=2, rowspan=2)
 
     def get_state(self):
         return ADSRState(
@@ -347,20 +350,19 @@ stream = pyaudio.PyAudio().open(
     frames_per_buffer=BUFFER_SIZE,
 )
 
-# fig = Figure(figsize=(5, 4), dpi=100)
-# my_plot = fig.add_subplot(1, 1, 1)
-# my_plot.set_ylim(-32767, 32767)
-# xs = SAMPLE_RATE/BUFFER_SIZE * np.arange(0, BUFFER_SIZE, 20)
-# line, = my_plot.plot(xs, [0] * len(xs), color = 'blue')
-# line.set_xdata(xs)
-# canvas = FigureCanvasTkAgg(fig, master = root)
-# canvas.draw()
-# W1 = canvas.get_tk_widget()
-# W1.pack()
-
-
 root = Tk.Tk()
 root.title("synthesizeme.com")
+
+fig = Figure(figsize=(5, 4), dpi=100)
+my_plot = fig.add_subplot(1, 1, 1)
+my_plot.set_ylim(-32767, 32767)
+xs = SAMPLE_RATE / BUFFER_SIZE * np.arange(0, BUFFER_SIZE, PLOT_SAMPLE_PERIOD)
+(line,) = my_plot.plot(xs, [0] * len(xs), color="blue")
+line.set_xdata(xs)
+canvas = FigureCanvasTkAgg(fig, master=root)
+canvas.draw()
+W1 = canvas.get_tk_widget()
+W1.grid(row=0, column=3, rowspan=2)
 
 key_tracker = KeyTracker()
 for key in key_to_note:
@@ -395,12 +397,16 @@ try:
         root.update()
         if notes_dict:
             samples = get_samples(notes_dict)
-            # line.set_ydata(samples[::20])
-            # canvas.draw()
+            ys = samples[::PLOT_SAMPLE_PERIOD]
             stream.write(samples.tobytes())
             # print(notes_dict.keys())
             ended_notes = [k for k, o in notes_dict.items() if o[0].ended and o[1]]
             for note in ended_notes:
                 del notes_dict[note]
+        else:
+            ys = [0] * len(xs)
+        line.set_ydata(ys)
+        canvas.draw()
+
 except KeyboardInterrupt as err:
     stream.close()

@@ -4,7 +4,7 @@
 - [x] fixed frequency
 - [x] modulation index (done by amplitute?)
 - [x] mix weights (done by amplitude?)
-- [ ] plot signal
+- [x] plot signal
 - [ ] midi -> wav
 - [ ] eliminate noise (might need further clipping?)
 - [ ] being able to play while changing settings
