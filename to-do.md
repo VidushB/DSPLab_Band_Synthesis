@@ -4,6 +4,7 @@
 - [x] fixed frequency
 - [x] modulation index (done by amplitute?)
 - [x] mix weights (done by amplitude?)
+- [ ] filters
 - [ ] being able to play while changing settings
 - [ ] midi -> wav
 - [ ] plot signal
