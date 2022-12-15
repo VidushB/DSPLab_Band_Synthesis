@@ -382,14 +382,14 @@ osc_states = None
 
 def update_adsr_state(new_adsr_state):
     global adsr_state
-    print("adsr state changed", new_adsr_state)
+    print("Attack Decay Sustain Relsease (adsr) state changed", new_adsr_state)
     adsr_state = new_adsr_state
     update_signal()
 
 
 def update_osc_states(new_osc_states):
     global osc_states
-    print("osc states changed", new_osc_states)
+    print("oscillator states changed", new_osc_states)
     osc_states = new_osc_states
     update_signal()
 
