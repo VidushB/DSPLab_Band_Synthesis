@@ -180,7 +180,7 @@ class SingleOsc:
         self.amp = Tk.DoubleVar(parent, 100 if self.is_modulator else 0.5)
         Tk.Scale(
             self.frame,
-            label="amp",
+            label="amplitude",
             variable=self.amp,
             from_=0,
             to=300 if self.is_modulator else 2,
@@ -213,7 +213,7 @@ class SingleOsc:
             self.freq = Tk.DoubleVar(parent, 5)
             Tk.Scale(
                 self.frame,
-                label="freq",
+                label="frequency",
                 variable=self.freq,
                 from_=1,
                 to=100,
@@ -283,7 +283,7 @@ class ADSR:
         self.state_change_callback = state_change_callback
 
         self.adsr_frame = ttk.Labelframe(
-            parent, text="adsr envelope", width=200, height=300
+            parent, text="Attack Decay Sustain Relsease (adsr) envelope", width=200, height=300
         )
 
         self.attack = Tk.DoubleVar(parent, 0.05)
