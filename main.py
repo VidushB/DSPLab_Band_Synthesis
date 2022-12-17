@@ -283,7 +283,7 @@ class ADSR:
         self.state_change_callback = state_change_callback
 
         self.adsr_frame = ttk.Labelframe(
-            parent, text="Attack Decay Sustain Relsease (adsr) envelope", width=200, height=300
+            parent, text="Attack Decay Sustain Relsease (ADSR) envelope", width=200, height=300
         )
 
         self.attack = Tk.DoubleVar(parent, 0.05)
