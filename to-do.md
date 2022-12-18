@@ -5,6 +5,8 @@
 - [x] modulation index (done by amplitute?)
 - [x] mix weights (done by amplitude?)
 - [x] plot signal
+- [x] Exit condition
+- [ ] filters
 - [ ] midi -> wav
 - [ ] eliminate noise (might need further clipping?)
 - [ ] being able to play while changing settings
