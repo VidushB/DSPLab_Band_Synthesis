@@ -7,6 +7,7 @@ import numpy as np
 import threading
 import time
 from collections import defaultdict
+from synth.components.filters import (Lowpass, Highpass)
 from synth.components.composers import WaveAdder
 from synth.components.envelopes import ADSREnvelope
 from synth.components.oscillators import (
@@ -40,6 +41,7 @@ key_to_note = {
     "j": "a#4",
     "m": "b4",
     ",": "c5",
+    "q":"c#5"
 }
 
 
@@ -118,6 +120,8 @@ class KeyTracker:
         return time.time() - self.last_press_time[ch] < 0.1
 
     def report_key_press(self, event):
+        if event.char == "q":
+            root.destroy()
         if not self.is_pressed(event.char) and self.cnt[event.char] == 0:
             handle_key_event("press", event.char)
         self.cnt[event.char] += 1
@@ -277,14 +281,12 @@ class ADSRState:
     sustain: float
     release: float
 
-
 class ADSR:
     def __init__(self, parent, state_change_callback):
         self.state_change_callback = state_change_callback
 
         self.adsr_frame = ttk.Labelframe(
-            parent, text="Attack Decay Sustain Relsease (ADSR) envelope", width=200, height=300
-        )
+            parent, text="Attack Decay Sustain Relsease (adsr) envelope", width=200, height=300)
 
         self.attack = Tk.DoubleVar(parent, 0.05)
         self.decay = Tk.DoubleVar(parent, 0.2)
@@ -397,6 +399,8 @@ def update_osc_states(new_osc_states):
 adsr = ADSR(root, update_adsr_state)
 osc = MultiOsc(root, update_osc_states)
 
+print("Press q when you want to exit")
+
 try:
     while True:
         root.update()
@@ -404,7 +408,6 @@ try:
             samples = get_samples(notes_dict)
             ys = samples[::PLOT_SAMPLE_PERIOD]
             stream.write(samples.tobytes())
-            # print(notes_dict.keys())
             ended_notes = [k for k, o in notes_dict.items() if o[0].ended and o[1]]
             for note in ended_notes:
                 del notes_dict[note]
