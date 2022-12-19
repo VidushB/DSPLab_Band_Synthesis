@@ -7,7 +7,6 @@ import numpy as np
 import threading
 import time
 from collections import defaultdict
-from synth.components.filters import (Lowpass, Highpass)
 from synth.components.composers import WaveAdder
 from synth.components.envelopes import ADSREnvelope
 from synth.components.oscillators import (
