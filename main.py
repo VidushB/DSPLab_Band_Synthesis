@@ -7,7 +7,6 @@ import numpy as np
 import threading
 import time
 from collections import defaultdict
-from synth.components.filters import (Lowpass, Highpass)
 from synth.components.composers import WaveAdder
 from synth.components.envelopes import ADSREnvelope
 from synth.components.oscillators import (
@@ -286,7 +285,7 @@ class ADSR:
         self.state_change_callback = state_change_callback
 
         self.adsr_frame = ttk.Labelframe(
-            parent, text="Attack Decay Sustain Relsease (adsr) envelope", width=200, height=300)
+            parent, text="Attack Decay Sustain Release (ADSR) envelope", width=200, height=300)
 
         self.attack = Tk.DoubleVar(parent, 0.05)
         self.decay = Tk.DoubleVar(parent, 0.2)
